@@ -1,0 +1,109 @@
+﻿New Table( "Expirement.jmp",
+	Add Rows( 18 ),
+	New Script(
+		"Source",
+		Open(
+			"C:\Users\mkami\Downloads\Brightness.csv",
+			columns(
+				New Column( "Phosphorous Type",
+					Numeric,
+					"Continuous",
+					Format( "Best", 12 )
+				),
+				New Column( "Glass Type",
+					Numeric,
+					"Continuous",
+					Format( "Best", 12 )
+				),
+				New Column( "Current uA",
+					Numeric,
+					"Continuous",
+					Format( "Best", 12 )
+				)
+			),
+			Import Settings(
+				End Of Line( CRLF, CR, LF ),
+				End Of Field( Comma, CSV( 1 ) ),
+				Strip Quotes( 0 ),
+				Use Apostrophe as Quotation Mark( 0 ),
+				Use Regional Settings( 0 ),
+				Scan Whole File( 1 ),
+				Treat empty columns as numeric( 0 ),
+				CompressNumericColumns( 0 ),
+				CompressCharacterColumns( 0 ),
+				CompressAllowListCheck( 0 ),
+				Labels( 1 ),
+				Column Names Start( 1 ),
+				Data Starts( 2 ),
+				Lines To Read( "All" ),
+				Year Rule( "20xx" )
+			)
+		)
+	),
+	New Column( "Soda Type",
+		Character,
+		"Nominal",
+		Set Values(
+			{"Tonic Water", "Tonic Water", "Tonic Water", "Club Soda", "Club Soda",
+			"Club Soda", "Ginger Ale", "Ginger Ale", "Ginger Ale", "Tonic Water",
+			"Tonic Water", "Tonic Water", "Club Soda", "Club Soda", "Club Soda",
+			"Ginger Ale", "Ginger Ale", "Ginger Ale"}
+		),
+		Set Display Width( 152 )
+	),
+	New Column( "Temp",
+		Numeric,
+		"Nominal",
+		Format( "Best", 12 ),
+		Set Values(
+			[21.89, 21.89, 21.89, 21.89, 21.89, 21.89, 21.89, 21.89, 21.89, 4.83,
+			4.83, 4.83, 4.83, 4.83, 4.83, 4.83, 4.83, 4.83]
+		),
+		Set Display Width( 258 )
+	),
+	New Column( "Time",
+		Numeric,
+		"Continuous",
+		Format( "Best", 12 ),
+		Set Values(
+			[190, 213, 232, 164, 220, 250, 166, 146, 196, 21, 25, 30, 38, 43, 26, 46,
+			43, 51]
+		),
+		Set Display Width( 363 )
+	),
+	New Column( "Log(Time)",
+		Numeric,
+		"Continuous",
+		Format( "Best", 12 ),
+		Formula( Log( :Time ) ),
+		Set Display Width( 195 )
+	),
+	New Column( "Residual",
+		Numeric,
+		"Continuous",
+		Format( "Best", 12 ),
+		Set Property( "Notes", "Fit Least Squares Residuals" ),
+		Set Values(
+			[-21.6666666666666, 1.3333333333334, 20.3333333333334, -47.3333333333333,
+			8.66666666666669, 38.6666666666667, -3.33333333333329, -23.3333333333333,
+			26.6666666666667, -14.3333333333334, -10.3333333333334, 24.6666666666666,
+			-16, 22, -6.00000000000004, -5.6666666666667, -14.6666666666667,
+			20.3333333333333]
+		),
+		Set Display Width( 205 )
+	)
+) << Run Formulas;
+Fit Model(
+	Y( :Name( "Log(Time)" ) ),
+	Effects( :Soda Type, :Temp, :Soda Type * :Temp ),
+	Personality( "Standard Least Squares" ),
+	Emphasis( "Effect Leverage" ),
+	Run(
+		:Name( "Log(Time)" ) << {Summary of Fit( 1 ), Analysis of Variance( 1 ),
+		Parameter Estimates( 1 ), Lack of Fit( 0 ), Normal Plot( 1 ),
+		Scaled Estimates( 0 ), Plot Actual by Predicted( 1 ), Plot Regression( 0 ),
+		Plot Residual by Predicted( 1 ), Plot Studentized Residuals( 0 ),
+		Plot Effect Leverage( 1 ), Plot Residual by Normal Quantiles( 0 ),
+		Box Cox Y Transformation( 0 ), Interaction Plots( 1 )}
+	)
+);
