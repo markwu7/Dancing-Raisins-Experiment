@@ -14,3 +14,7 @@
 
 * Type of  Design:
   * Cross-Factor Design 
+
+### Link:
+
+[Project](https://github.com/markwu7/STAT424-Project/tree/main/Project)
